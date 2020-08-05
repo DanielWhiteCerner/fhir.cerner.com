@@ -14,7 +14,6 @@ The following fields are returned if valued:
 
 * [Id](https://hl7.org/fhir/R4/resource-definitions.html#Resource.id){:target="_blank"}
 * [Identifier](https://hl7.org/fhir/R4/observation-definitions.html#Observation.identifier){:target="_blank"}
-* [BasedOn](https://hl7.org/fhir/R4/observation-definitions.html#Observation.basedOn){:target="_blank"}
 * [Status](https://hl7.org/fhir/R4/observation-definitions.html#Observation.status){:target="_blank"}
 * [Category (laboratory, social history)](https://hl7.org/fhir/R4/observation-definitions.html#Observation.category){:target="_blank"}
 * [Code (Observation name or text)](https://hl7.org/fhir/R4/observation-definitions.html#Observation.code){:target="_blank"}
@@ -46,7 +45,6 @@ The following fields are returned if valued:
 
 * valueAttachment: URL for this extension is defined as: `http://hl7.org/fhir/5.0/StructureDefinition/extension-Observation.valueAttachment`
   This extension is defined and referenced from the newer version of FHIR. See [Extensions for converting between versions] and [R5 Snapshot of Observation.value] for more information.
-* [performerFunction]
 
 ## Search
 
@@ -90,7 +88,6 @@ Notes:
 * The `code` parameter:
   * May be a list of comma separated values. A system must be provided for each code.
   * Searches only `Observation.code`. For example when fetching blood pressures the resource will be only be returned when the search is based on `85354-9(Systolic and Diastolic BP)`. Using the component codes `8480-6(Systolic BP)` or `8462-4 (Diastolic BP)` will not return the resource.
-  * Searching with proprietary codes or systems is not supported.
 
 * The `date` and `_lastUpdated` parameters may be provided up to two times, and must use the `eq`, `ge`, `gt`, `le`, or `lt` prefixes. When a value is provided without a prefix, an implied `eq` prefix is used. When provided twice, the lower value must have a `ge` or `gt` prefix and the higher value must have an `le` or `lt` prefix.
 
@@ -178,6 +175,65 @@ The `ETag` response header indicates the current `If-Match` version to use on a 
 
 The common [errors] and [OperationOutcomes] may be returned.
 
+## Labs Create
+
+Create a new Observation for labs.
+
+    POST /Observation
+
+_Implementation Notes_
+
+* Only the body fields mentioned below are supported. Unsupported fields will be ignored.
+* Modifier fields should not be provided, and will cause the transaction to fail.
+
+### Authorization Types
+
+<%= authorization_types(practitioner: true, system: false) %>
+
+### Headers
+
+<%= headers head: {Authorization: '&lt;OAuth2 Bearer Token>', 'Content-Type': 'application/fhir+json'} %>
+
+### Body Fields
+
+<%= definition_table(:observation_labs, :create, :r4) %>
+
+### Example
+
+#### Request
+
+    POST https://fhir-ehr.devcerner.com/r4/eb2384f8-839e-4c6e-8b29-18e71db1a0b1/Observation
+
+#### Body
+
+<%= json(:r4_observation_labs_create) %>
+
+#### Response
+
+<%= headers status: 201 %>
+<pre class="terminal">
+Cache-Control: no-cache
+Content-Length: 0
+Content-Type: text/html
+Date: Fri, 31 Jul 2020 22:35:22 GMT
+Etag: W/"1"
+Location: https://fhir-ehr.devcerner.com/r4/eb2384f8-839e-4c6e-8b29-18e71db1a0b1/Observation/M-17834008
+Last-Modified: Fri, 31 Jul 2020 22:35:22 GMT
+Server-Response-Time: 13044.967
+Status: 201 Created
+Vary: Origin
+X-Request-Id: 572f1f21-3a03-429a-9001-abcb9c9bec9f
+X-Runtime: 13.044806
+</pre>
+
+The `ETag` response header indicates the current `If-Match` version to use on a subsequent update.
+
+<%= disclaimer %>
+
+### Errors
+
+The common [errors] and [OperationOutcomes] may be returned.
+
 [`reference`]: https://hl7.org/fhir/r4/search.html#reference
 [`token`]: https://hl7.org/fhir/r4/search.html#token
 [`date`]: https://hl7.org/fhir/r4/search.html#date
@@ -187,4 +243,3 @@ The common [errors] and [OperationOutcomes] may be returned.
 [OperationOutcomes]: ../../#operation-outcomes
 [Extensions for converting between versions]: https://www.hl7.org/fhir/r4/versions.html#extensions
 [R5 Snapshot of Observation.value]: https://hl7.org/fhir/2020Feb/observation-definitions.html#Observation.value_x_
-[performerFunction]: http://hl7.org/fhir/R4/extension-event-performerfunction.html
